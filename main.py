@@ -42,11 +42,12 @@ def cherche_autour(etoile, daostarfinder, x, y):
     """Entrées:
         etoile: les données d'une étoile sur une image i,
         daostarfinder: les données de tous les objets sur l'image i + 1,
-        x, y: une distance x et une distance y.
+        x, y: une distance x et une distance y .
     Sortie:
         les données de l'objet qui 'ressemble' le plus a etoile sous forme d'une liste
 
     Cherche dans une zone rectangulaire xy autour des coordonnées de etoile l'objet qui possède les données les plus proches de etoile
+    sur l'image suivante.
     Ce programme n'est pas optimal mais il a permis de trouver les données dont nous avions besoin, il est donc tout a
     fait possible qu'il ne rende pas le resultat voulu, cela depend aussi de la precision de la detection des objets
     sur les images
@@ -61,7 +62,7 @@ def cherche_autour(etoile, daostarfinder, x, y):
         # l'indice 1 correspond a la coordonnée x de l'objet, 2 sa coordonnée y
         if (abs((ligne[1] - etoile[1])) <= x):
             if ((abs(ligne[2] - (etoile[2])) <= y)):
-                # On creer une liste contenant les objets a proximité de etoile (proximite definie par xy)
+                # On ajoute les objets a proximité de etoile (proximite definie par xy)
                 list += [ligne]
 
     # On regarde maintenant les proprietes de chaque objet a proximite de etoile pour determiner lequel est le plu ressemblant
@@ -75,7 +76,7 @@ def cherche_autour(etoile, daostarfinder, x, y):
     # et on ajoute l'indice de cet objet dans une liste tableau
     tableau = []
     for i in range(len(ecart[0])):
-        u = 8000
+        u = 8000  #u est une valeur arbitraire, voulu virtuelemnt infinit, ici 8000 est largement asse
         indice = None
         for j in range(len(ecart)):
             if ecart[j][i] <= u:
@@ -101,7 +102,7 @@ def cherche_autour(etoile, daostarfinder, x, y):
 def nuage_points(indice, iref):
     """Entrees:
         indice: indice sur l'image 1 de l'etoile dont l'on veut etudier la trajectoire
-        iref: indice sur l'image 1 de l'etoile de référence par rapport a laquelle on veut calculer les coordonnées
+        iref: est l'indice d'une etoile qui ne bouge pas au cours du temps, elle permet de suprimer tous décallage possible            entre 2 images
     Sortie:
         les positions de l'étoile calculées en placant l'origine sur l'etoile de reference
         sur toutes les images sous la forme d'une liste
