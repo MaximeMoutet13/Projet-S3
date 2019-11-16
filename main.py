@@ -76,7 +76,7 @@ def cherche_autour(etoile, daostarfinder, x, y):
     # et on ajoute l'indice de cet objet dans une liste tableau
     tableau = []
     for i in range(len(ecart[0])):
-        u = 8000  #u est une valeur arbitraire, voulu virtuelemnt infinit, ici 8000 est largement asse
+        u = 8000  #u est une valeur arbitraire, voulu virtuelemnt infinit, ici 8000 est largement assez
         indice = None
         for j in range(len(ecart)):
             if ecart[j][i] <= u:
