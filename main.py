@@ -2,6 +2,10 @@ from astropy.io import fits
 import matplotlib.pyplot as plt
 from photutils import DAOStarFinder
 from astropy.stats import sigma_clipped_stats
+import numpy as np
+
+cmap = plt.cm.jet
+cl = [cmap(i) for i in np.linspace(0, 1, 12)]
 
 
 def dao(i):
@@ -14,40 +18,51 @@ def dao(i):
 
     # Ouvre l'image format .fits suivante
     hdul = fits.open(
-        '/home/maxime/Documents/Workspace Python/Project_S3/tn%d0.fts' % i)  # Modifier le chemin d'accès pour ouvrir les images
+        '/home/maxime/Documents/Workspace Python/Project_S3/photos/tn%d0.fts' % i)  # Modifier le chemin d'accès pour ouvrir les images
     hdu = hdul[0].data
 
     # On utilise des paramètres adaptés afin de détecter tous les objets sur l'image
     mean, median, std = sigma_clipped_stats(hdu, sigma=3.0)
-    daofind = DAOStarFinder(fwhm=10.0, threshold=5 * std)
+    # Nous avons fait les 3 premières étoiles avec fwhm=10
+    # La dernière a été faite avec fwhm=5
+    daofind = DAOStarFinder(fwhm=5.0, threshold=5 * std)
     sources = daofind(hdu - median)
 
     # Construit une table avec les données relatives aux objets détéctés
     for col in sources.colnames:
-        sources[col].info.format = '%.8g'  # for consistent table output
+        sources[col].info.format = '%.8g'
     return sources
 
 
-"""
-# Affiche tous les objets détéctés sur l'image i
+# # Affiche tous les objets détéctés sur l'image i
 i = 0
-
 k = dao(i)
-plt.plot(k[1][:], k[2][:], "+r")
-plt.show()
-"""
+print(k)
+plt.plot(k[1][:], k[2][:], "+r", label="étoiles détectées")
+
+
+# j = 17
+# plt.plot(k[j][1], k[j][2], "xb")
+# plt.show()
+
+
+# plt.axis([0, 256, 0, 256])
+# plt.xlabel("x (en nombre de pixels)")
+# plt.ylabel("y (en nombre de pixels)")
+# plt.legend()
+# plt.grid()
+# plt.show()
 
 
 def cherche_autour(etoile, daostarfinder, x, y):
     """Entrées:
         etoile: les données d'une étoile sur une image i,
         daostarfinder: les données de tous les objets sur l'image i + 1,
-        x, y: une distance x et une distance y .
+        x, y: une distance x et une distance y.
     Sortie:
         les données de l'objet qui 'ressemble' le plus a etoile sous forme d'une liste
 
     Cherche dans une zone rectangulaire xy autour des coordonnées de etoile l'objet qui possède les données les plus proches de etoile
-    sur l'image suivante.
     Ce programme n'est pas optimal mais il a permis de trouver les données dont nous avions besoin, il est donc tout a
     fait possible qu'il ne rende pas le resultat voulu, cela depend aussi de la precision de la detection des objets
     sur les images
@@ -62,7 +77,7 @@ def cherche_autour(etoile, daostarfinder, x, y):
         # l'indice 1 correspond a la coordonnée x de l'objet, 2 sa coordonnée y
         if (abs((ligne[1] - etoile[1])) <= x):
             if ((abs(ligne[2] - (etoile[2])) <= y)):
-                # On ajoute les objets a proximité de etoile (proximite definie par xy)
+                # On creer une liste contenant les objets a proximité de etoile (proximite definie par xy)
                 list += [ligne]
 
     # On regarde maintenant les proprietes de chaque objet a proximite de etoile pour determiner lequel est le plu ressemblant
@@ -76,7 +91,7 @@ def cherche_autour(etoile, daostarfinder, x, y):
     # et on ajoute l'indice de cet objet dans une liste tableau
     tableau = []
     for i in range(len(ecart[0])):
-        u = 8000  #u est une valeur arbitraire, voulu virtuelemnt infinit, ici 8000 est largement assez
+        u = 8000
         indice = None
         for j in range(len(ecart)):
             if ecart[j][i] <= u:
@@ -102,7 +117,7 @@ def cherche_autour(etoile, daostarfinder, x, y):
 def nuage_points(indice, iref):
     """Entrees:
         indice: indice sur l'image 1 de l'etoile dont l'on veut etudier la trajectoire
-        iref: est l'indice d'une etoile qui ne bouge pas au cours du temps, elle permet de suprimer tous décallage possible            entre 2 images
+        iref: indice sur l'image 1 de l'etoile de référence par rapport a laquelle on veut calculer les coordonnées
     Sortie:
         les positions de l'étoile calculées en placant l'origine sur l'etoile de reference
         sur toutes les images sous la forme d'une liste
@@ -122,25 +137,31 @@ def nuage_points(indice, iref):
     return List1
 
 
-"""
 # L'indice de l'etoile de reference sur l'image 1 est 17
-# indices d'etoile qui parcourt beaucoup de distance sur les image: 22,
+# indices d'etoile qui parcourt beaucoup de distance sur les image:
+# pour les étoile 1,2,3 (fwhm=10): 22, 27, 16
+# pour la derniere étoile (fwhm=5): 29
 
+plt.figure()
 # Permet d'afficher les coordonnée d'une etoile sur chaque image et donc de retrouver une partie de sa trajectoire
-
-i = 22
+i = 29
 ref = 17
 u = nuage_points(i, ref)
-for coord in u:
+for i, coord in enumerate(u):
     x, y = coord
-    plt.plot(x, y, "+b")
-plt.show()
+    plt.plot(x, y, "o", color=cl[i])
+# plt.show()
 
-# Creer un fichier avec les coordonnees de l'etoile traquee
-# f = open("Coordonnées_etoile%d.txt" % i, "w")
-# f.write("X" + "\t" + "Y")
+# f = open("coordonnees_etoile4.cdv", "w")
+# f.write("X" + ";" + "Y" + "\n")
 # for coord in u:
 #     x, y = coord
 #     f.write(str(x) + ";" + str(y) + "\n")
 # f.close()
-"""
+
+# plt.xlabel("x (par rapport à l'étoile de référence), en nombre de pixels")
+# plt.ylabel("y (par rapport à l'étoile de référence), en nombre de pixels")
+# plt.legend()
+# plt.title("Position d'une étoile sur les 12 images")
+# # plt.grid()
+# plt.show()
