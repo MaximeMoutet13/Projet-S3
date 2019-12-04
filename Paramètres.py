@@ -22,8 +22,8 @@ etoileprof = [9.18798322, 5.57822734, 130.19721943, 137.80082187, 1.71578036]
 a1 = 20.9015808 * conversion_metre
 a2 = 41.87228216 * conversion_metre
 a3 = 19.4142139 * conversion_metre
-ae = 9.18798322 * conversion_metre  # étoile qui parcourt une période entière
-
+a4 = 9.18798322 * conversion_metre  # étoile qui parcourt une période entière
+b4 = 5.57822734 * conversion_metre
 """
 # partie ou l'on tentait de mesurer le périmètre d'une ellipse, au final inutile
 point12 = u[0]
@@ -53,14 +53,19 @@ Timages = (153 // 12) * 3.154 * 10 ** 7  # temps entre la première et la derni�
 T1 = 3 * Timages
 T2 = 2 * Timages
 T3 = 6 * Timages
-Te = Timages
+T4 = Timages
 
 # Calculs de la masse (en nombre de masse solaires) pour les différentes étoiles
-M1 = Masse(T1, a1, G) / M_Soleil
-M2 = Masse(T2, a2, G) / M_Soleil
-M3 = Masse(T3, a3, G) / M_Soleil
-Me = Masse(Te, ae, G) / M_Soleil
-print("M1=", M1, "\nM2=", M2, "\nM3=", M3, "\nMe=", Me)
+M1 = Masse(T1, a1, G) / (M_Soleil * 10 ** (6))
+M2 = Masse(T2, a2, G) / (M_Soleil * 10 ** (6))
+M3 = Masse(T3, a3, G) / (M_Soleil * 10 ** (6))
+M4 = Masse(T4, a4, G) / (M_Soleil * 10 ** (6))
 
-M = (M1 + M2 + M3 + Me) / 4
+print("M1=", M1, "\nM2=", M2, "\nM3=", M3, "\nM4=", M4)
+
+M = (M1 + M2 + M3 + M4) / 4
 print("Mmoyenne =", M)
+
+# f = open("vQ.csv", "w")
+# f.write(str(M1) + ";" + str(M2) + ";" + str(M3) + ";" + str(M4) + ";" + str(M))
+# f.close()
