@@ -6,7 +6,7 @@ import numpy as np
 
 G = 6.674 * 10 ** (-11)  # constante gravitationnelle (m3 kg-1 s-2)
 
-echelle = 10 / 38  # mesurée à la main sur les images
+echelle = 10 / 22  # mesurée à la main sur les images
 light_day_metre = 2.59 * 10 ** 13  # valeur d'un jour lumière en mètres
 conversion_metre = echelle * light_day_metre  # valeur d'un pixel sur les images en mètres
 
@@ -16,14 +16,14 @@ M_Soleil = 2 * 10 ** 30  # kg
 etoile1 = [2.09015808e+01, 1.96049819e+01, -8.93978661e+01, 4.63626002e+01, 2.80114359e-15]
 etoile2 = [22.55206895, 41.87228216, -85.25262962, 45.72639473, 3.14159265]
 etoile3 = [1.30357974e+01, 1.94142139e+01, -7.29459896e+01, 1.96759027e+01, 2.15513863e-08]
+etoile4 = [9.18798322, 5.57822734, 130.19721943, 137.80082187, 1.71578036] # étoile qui parcourt une période entière
 
-etoileprof = [9.18798322, 5.57822734, 130.19721943, 137.80082187, 1.71578036]
 # on prend les mesures des demi grands axes que l'on met en mètres
 a1 = 20.9015808 * conversion_metre
 a2 = 41.87228216 * conversion_metre
 a3 = 19.4142139 * conversion_metre
-a4 = 9.18798322 * conversion_metre  # étoile qui parcourt une période entière
-b4 = 5.57822734 * conversion_metre
+a4 = 9.18798322 * conversion_metre
+
 """
 # partie ou l'on tentait de mesurer le périmètre d'une ellipse, au final inutile
 point12 = u[0]
@@ -51,8 +51,8 @@ Timages = (153 // 12) * 3.154 * 10 ** 7  # temps entre la première et la derni�
 
 # on utilise des relations linéaires entre la période totale et la période des images
 T1 = 3 * Timages
-T2 = 2 * Timages
-T3 = 6 * Timages
+T2 = 8 * Timages
+T3 = 2 * Timages
 T4 = Timages
 
 # Calculs de la masse (en nombre de masse solaires) pour les différentes étoiles
@@ -65,7 +65,3 @@ print("M1=", M1, "\nM2=", M2, "\nM3=", M3, "\nM4=", M4)
 
 M = (M1 + M2 + M3 + M4) / 4
 print("Mmoyenne =", M)
-
-# f = open("vQ.csv", "w")
-# f.write(str(M1) + ";" + str(M2) + ";" + str(M3) + ";" + str(M4) + ";" + str(M))
-# f.close()
