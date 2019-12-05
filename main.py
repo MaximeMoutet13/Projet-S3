@@ -41,10 +41,6 @@ print(k)
 plt.plot(k[1][:], k[2][:], "+r", label="étoiles détectées")
 
 
-# j = 17
-# plt.plot(k[j][1], k[j][2], "xb")
-# plt.show()
-
 
 # plt.axis([0, 256, 0, 256])
 # plt.xlabel("x (en nombre de pixels)")
@@ -142,22 +138,15 @@ def nuage_points(indice, iref):
 # pour les étoile 1,2,3 (fwhm=10): 22, 27, 16
 # pour la derniere étoile (fwhm=5): 29
 
-plt.figure()
+# plt.figure()
 # Permet d'afficher les coordonnée d'une etoile sur chaque image et donc de retrouver une partie de sa trajectoire
-i = 29
-ref = 17
-u = nuage_points(i, ref)
-for i, coord in enumerate(u):
-    x, y = coord
-    plt.plot(x, y, "o", color=cl[i])
+# i = 29
+# ref = 17
+# u = nuage_points(i, ref)
+# for i, coord in enumerate(u):
+#    x, y = coord
+#    plt.plot(x, y, "o", color=cl[i])
 # plt.show()
-
-# f = open("coordonnees_etoile4.cdv", "w")
-# f.write("X" + ";" + "Y" + "\n")
-# for coord in u:
-#     x, y = coord
-#     f.write(str(x) + ";" + str(y) + "\n")
-# f.close()
 
 # plt.xlabel("x (par rapport à l'étoile de référence), en nombre de pixels")
 # plt.ylabel("y (par rapport à l'étoile de référence), en nombre de pixels")
